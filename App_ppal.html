@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WiSe • Prototipo UI</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121a2a;
+      --muted:#8fa3c9;
+      --accent:#5dd0ff;
+      --accent-2:#8bdf72;
+      --text:#eaf2ff;
+      --warning:#ffcc66;
+      --danger:#ff7a7a;
+      --radius:18px;
+      --shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 800px at 80% -10%, #1a2a48 0%, transparent 60%), var(--bg);
+      color:var(--text);
+    }
+
+    .app{max-width:1100px; margin:0 auto; padding:20px 18px 60px}
+
+    .topbar{display:flex; align-items:center; gap:12px; padding:8px 4px 18px}
+    .back{appearance:none; border:1px solid #24314a; color:var(--text); background:#0e1728; padding:8px 12px; border-radius:12px; cursor:pointer}
+    .back[hidden]{display:none}
+    .brandwrap{display:flex; align-items:center; gap:10px}
+    .logo{width:38px; height:38px; object-fit:contain; border-radius:8px; border:1px solid #24314a; background:#0e1728; padding:4px}
+    .brand{font-weight:700; letter-spacing:.3px; font-size:18px; opacity:.9}
+    .subtitle{color:var(--muted); font-size:13px}
+
+    /* Home */
+    .grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
+    @media(min-width:680px){ .grid{grid-template-columns:repeat(4, minmax(0,1fr));} }
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--card); border:1px solid #24314a; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; cursor:pointer; transition: transform .18s ease, border-color .18s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; min-height:130px}
+    .card:hover{ transform:translateY(-3px); border-color:#3b4c6f }
+    .card .emoji{ width:58px; height:58px; display:block; filter: drop-shadow(0 6px 14px rgba(0,0,0,.25)); }
+    .card h3{ margin:6px 0 0; font-size:15px; letter-spacing:.2px }
+    .badge{font-size:11px; color:var(--muted)}
+
+    .section{display:none}
+    .section.active{display:block}
+    .section h2{margin:6px 0 16px; font-size:18px}
+
+    /* Mis Lotes */
+    .lots{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px }
+    @media(min-width:680px){ .lots{grid-template-columns:repeat(3, minmax(0,1fr));} }
+    .ghost{ border:1px dashed #3b4c6f; background: transparent; }
+
+    .group{ margin:18px 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted) }
+
+    /* Charts */
+    .charts{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px }
+    @media(min-width:780px){ .charts{grid-template-columns:repeat(4, minmax(0,1fr));} }
+    .chart{ background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--card); border:1px solid #24314a; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; text-align:center }
+    .meter{width:120px; height:120px; margin:0 auto 10px; position:relative}
+    .meter svg{ width:120px; height:120px; display:block }
+    .meter .value{ position:absolute; inset:0; display:grid; place-items:center; font-weight:700 }
+
+    .muted{ color:var(--muted); font-size:12px }
+
+    .toolbar{ display:flex; gap:8px; align-items:center; margin:0 0 12px; flex-wrap:wrap }
+    .btn{ appearance:none; border:1px solid #24314a; background:#0e1728; color:var(--text); padding:8px 12px; border-radius:12px; cursor:pointer }
+
+    .footer{margin-top:28px; color:var(--muted); font-size:12px}
+    .chip{ display:inline-block; padding:.2rem .55rem; border:1px solid #2b3957; border-radius:999px; margin-left:.35rem }
+
+    /* etiqueta pill reutilizable */
+    .pill{ display:inline-block; padding:2px 8px; border:1px solid #2b3957; border-radius:999px; font-size:12px; color:var(--muted) }
+
+    /* Detalle de Lote */
+    .detail{ display:grid; gap:14px }
+    .summary{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px }
+    .summary .mini{ background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--card); border:1px solid #24314a; border-radius:14px; padding:12px }
+
+    .tabs{ display:flex; gap:8px; flex-wrap:wrap }
+    .tab{ padding:8px 12px; border:1px solid #2b3957; border-radius:10px; cursor:pointer; background:#0e1728; color:var(--muted) }
+    .tab[data-tab="mapa"]{ border-color:#3b6bd1; color:#7fa4ff }
+    .tab[data-tab="tareas"]{ border-color:#c4973b; color:#ffd27a }
+    .tab[data-tab="sensoresLote"]{ border-color:#8e54e9; color:#c6a8ff }
+    .tab[data-tab="ia"]{ border-color:#3fa16b; color:#9be3b6 }
+    .tab.active{ background:#13203a; color:#eaf2ff; box-shadow:inset 0 0 0 1px rgba(255,255,255,.06) }
+
+    .tabpanel{ display:none; margin-top:10px }
+    .tabpanel.active{ display:block }
+
+    .mapbox{ height:260px; border-radius:16px; border:1px solid #24314a; background:
+      linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.25)),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="%232a4a6a"/><stop offset="1" stop-color="%2319364f"/></linearGradient></defs><rect width="600" height="400" fill="url(%23g)"/><circle cx="320" cy="170" r="120" fill="rgba(255,255,255,0.08)"/><rect x="120" y="240" width="280" height="80" fill="rgba(255,255,255,0.06)"/></svg>') center/cover no-repeat; box-shadow:var(--shadow); display:grid; place-items:center; color:#cfe7ff }
+
+    /* Catálogo */
+    .table{ width:100%; border-collapse:collapse; font-size:14px }
+    .table th, .table td{ border-bottom:1px solid #24314a; padding:10px; text-align:left }
+    .table th{ color:var(--muted); font-weight:600 }
+
+    /* Crear Lote — estilo ampliado, mismo fondo */
+    form.detail{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--card);
+      border:1px solid #24314a;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px;
+      display:grid;
+      gap:20px;
+      max-width:760px;
+    }
+    .field{display:flex; flex-direction:column; gap:8px}
+    .field label{color:var(--muted); font-size:13px}
+    input, select, textarea{
+      background:var(--bg);
+      border:1px solid #2b3957;
+      color:var(--text);
+      border-radius:12px;
+      padding:12px 14px;
+      font-size:16px;
+    }
+    textarea{min-height:120px}
+    input:focus, select:focus, textarea:focus{ outline:none; border-color:#3b6bd1; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <button id="backBtn" class="back" hidden onclick="goBack()">◀ Atrás</button>
+      <div class="brandwrap">
+        <img id="logoImg" class="logo" alt="WiSe" src="" />
+        <div>
+          <div class="brand">WiSe • Agricultura Inteligente</div>
+          <div class="subtitle" id="subtitle">Inicio</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INICIO -->
+    <section id="inicio" class="section active">
+      <div class="grid">
+        <div class="card" onclick="nav('lotes')">
+          <div class="emoji">🌱</div>
+          <h3>MIS LOTES</h3>
+          <div class="badge">Ver/crear cultivos</div>
+        </div>
+        <div class="card" onclick="nav('sensores')">
+          <div class="emoji">📟</div>
+          <h3>MIS SENSORES</h3>
+          <div class="badge">Lecturas y estado</div>
+        </div>
+        <div class="card" onclick="nav('config')">
+          <div class="emoji">⚙️</div>
+          <h3>CONFIGURACIÓN</h3>
+          <div class="badge">Preferencias</div>
+        </div>
+        <div class="card" onclick="nav('ayuda')">
+          <div class="emoji">🛟</div>
+          <h3>CENTRO DE AYUDA</h3>
+          <div class="badge">FAQs y soporte</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIS LOTES -->
+    <section id="lotes" class="section">
+      <div class="toolbar">
+        <h2 style="margin:0">Mis Lotes</h2>
+        <button class="btn" onclick="nav('crear-lote')">➕ Crear Lote</button>
+      </div>
+      <div id="lotsGrid" class="lots"></div>
+      <div class="footer">Mantiene el mismo estilo de la pantalla inicial<span class="chip">Prototipo</span></div>
+    </section>
+
+    <!-- DETALLE LOTE -->
+    <section id="lote-detalle" class="section">
+      <div class="toolbar">
+        <h2 id="lotTitle" style="margin:0">Detalle de Lote</h2>
+        <span id="lotAge" class="pill"></span>
+      </div>
+      <div class="detail">
+        <div class="summary">
+          <div class="mini"><div class="muted">Cultivo</div><div id="sumCultivo" style="font-weight:700">—</div></div>
+          <div class="mini"><div class="muted">Área</div><div id="sumArea" style="font-weight:700">—</div></div>
+          <div class="mini"><div class="muted">Fecha de siembra</div><div id="sumFecha" style="font-weight:700">—</div></div>
+        </div>
+        <div class="tabs">
+          <button class="tab" data-tab="mapa">Mapa</button>
+          <button class="tab" data-tab="tareas">Tareas</button>
+          <button class="tab" data-tab="sensoresLote">Sensores</button>
+          <button class="tab" data-tab="ia">Recomendaciones IA</button>
+        </div>
+        <div id="tab-mapa" class="tabpanel">
+          <div class="mapbox">Imagen satelital (placeholder)</div>
+          <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+            <div id="ndviDonut" class="chart" style="max-width:220px"></div>
+            <div>
+              <div class="muted">NDVI estimado</div>
+              <div id="ndviVal" style="font-size:28px; font-weight:700">—</div>
+              <div class="legend" style="margin-top:8px">
+                <span class="muted">Bajo</span>
+                <div style="width:180px;height:10px;border-radius:6px;background:linear-gradient(90deg,#9c27b0,#4caf50);border:1px solid #2b3957"></div>
+                <span class="muted">Alto</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-tareas" class="tabpanel">
+          <div class="tasks" id="tasksList"></div>
+          <div class="field">
+            <label class="muted">Comentarios del estado del cultivo</label>
+            <textarea id="commentBox" placeholder="Observaciones, plagas, estrés hídrico, fenología…"></textarea>
+            <button class="btn" onclick="guardarComentarioActual()">Guardar comentario</button>
+            <div id="commentStatus" class="muted"></div>
+          </div>
+        </div>
+        <div id="tab-sensoresLote" class="tabpanel">
+          <!-- Solo gráfica general -->
+          <div id="sensChart" class="chart" style="max-width:820px; margin-bottom:10px"></div>
+        </div>
+        <div id="tab-ia" class="tabpanel">
+          <div class="task" style="border:1px solid #2b3957; border-radius:12px; padding:10px; background:#0e1728">
+            <strong>Recomendación generada (demo)</strong>
+            <p style="margin:.4rem 0 0">Con NDVI <span id="iaNdvi"></span> y humedad de suelo <span id="iaHum"></span>, se sugiere: <em id="iaText">—</em></p>
+            <small class="muted">Esta sección será alimentada por el modelo de IA.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MIS SENSORES (lecturas) -->
+    <section id="sensores" class="section">
+      <div class="toolbar">
+        <h2 style="margin:0">Mis Sensores</h2>
+        <button class="btn" onclick="randomizeAll()">Actualizar datos</button>
+        <button class="btn" onclick="nav('catalogo')">📚 Gestión de sensores</button>
+      </div>
+      <div class="group">Suelo</div>
+      <div class="charts" id="charts-suelo"></div>
+      <div class="group">Clima</div>
+      <div class="charts" id="charts-clima"></div>
+      <div class="group">Hídrico</div>
+      <div class="charts" id="charts-hidrico"></div>
+      <div class="footer">Datos simulados aleatoriamente para visualización<span class="chip">Mock</span></div>
+    </section>
+
+    <!-- Catálogo / Gestión de Sensores -->
+    <section id="catalogo" class="section">
+      <div class="toolbar">
+        <h2 style="margin:0">Catálogo de Sensores</h2>
+        <button class="btn" onclick="nuevoSensorMock()">➕ Añadir sensor</button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr><th>ID</th><th>Tipo</th><th>Estado</th><th>Batería</th><th>Vinculado a</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="catalogBody"></tbody>
+      </table>
+      <div class="footer">Emparejar, ver estado y batería. Todo es demostrativo.<span class="chip">Prototipo</span></div>
+    </section>
+
+    <!-- Configuración -->
+    <section id="config" class="section">
+      <h2>Configuración</h2>
+      <p class="muted">Pantalla de ejemplo. Aquí podrás ajustar unidades, idioma, zonas horarias y emparejar sensores.</p>
+    </section>
+
+    <!-- Ayuda -->
+    <section id="ayuda" class="section">
+      <h2>Centro de Ayuda</h2>
+      <p class="muted">Preguntas frecuentes, tutoriales rápidos y contacto de soporte.</p>
+    </section>
+
+    <!-- Crear Lote -->
+    <section id="crear-lote" class="section">
+      <div class="toolbar"><h2 style="margin:0">Crear Lote</h2></div>
+      <form onsubmit="return crearLote(event)" class="detail">
+        <div class="field">
+          <label>Cultivo</label>
+          <select id="fCultivo" required>
+            <option value="Aguacate">Aguacate</option>
+            <option value="Maíz">Maíz</option>
+            <option value="Café">Café</option>
+            <option value="Papa">Papa</option>
+            <option value="Cítricos">Cítricos</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Área (ha)</label>
+          <input id="fArea" type="number" step="0.01" min="0.01" placeholder="5.20" required />
+        </div>
+        <div class="field">
+          <label>Fecha de siembra</label>
+          <input id="fFecha" type="date" required />
+        </div>
+        <div class="field">
+          <label>Distribución de siembra</label>
+          <input id="fDistrib" type="text" placeholder="ej. 7m x 7m, 204 pl/ha" />
+        </div>
+        <div class="field">
+          <label>Ubicación (opcional)</label>
+          <input id="fUbic" type="text" placeholder="Municipio / Finca / Coordenadas" />
+        </div>
+        <div class="field">
+          <label>Notas</label>
+          <textarea id="fNotas" placeholder="Observaciones relevantes"></textarea>
+        </div>
+        <button class="btn" type="submit">Guardar Lote</button>
+      </form>
+      <div id="crearStatus" class="muted" style="margin-top:8px"></div>
+    </section>
+
+  </div>
+
+  <script>
+    // Estado (mock)
+    const LS_LOTES = 'wise_lotes';
+    const LS_SENS = 'wise_sensores';
+    const LS_COMMENTS = 'wise_comments';
+
+    function seed(){
+      if(!localStorage.getItem(LS_LOTES)){
+        const demo = [
+          {id:'L1', nombre:'Lote A - Maíz', cultivo:'Maíz', area:4.5, fecha:'2025-07-10', distrib:'0.8 x 0.3 m', ubic:'Tolima', notas:'Variedad híbrida; riego por goteo.', sensores:['S1','S2','S5','S7']},
+          {id:'L2', nombre:'Lote B - Aguacate', cultivo:'Aguacate', area:6.2, fecha:'2025-05-20', distrib:'7 x 7 m', ubic:'Antioquia', notas:'Hass; sombra parcial.', sensores:['S3','S4','S6']}
+        ];
+        localStorage.setItem(LS_LOTES, JSON.stringify(demo));
+      }
+      if(!localStorage.getItem(LS_SENS)){
+        const sens = [
+          {id:'S1', tipo:'Humedad Suelo', estado:'OK', bateria:85, vinculado:'L1'},
+          {id:'S2', tipo:'Temperatura Aire', estado:'OK', bateria:62, vinculado:'L1'},
+          {id:'S3', tipo:'EC Suelo', estado:'Bajo', bateria:40, vinculado:'L2'},
+          {id:'S4', tipo:'pH Suelo', estado:'OK', bateria:77, vinculado:'L2'},
+          {id:'S5', tipo:'NPK Suelo', estado:'OK', bateria:58, vinculado:'L1'},
+          {id:'S6', tipo:'Radiación', estado:'OK', bateria:73, vinculado:'L2'},
+          {id:'S7', tipo:'Lluvia', estado:'OK', bateria:55, vinculado:'L1'}
+        ];
+        localStorage.setItem(LS_SENS, JSON.stringify(sens));
+      }
+    }
+
+    const getLotes = ()=> JSON.parse(localStorage.getItem(LS_LOTES)||'[]');
+    const setLotes = (v)=> localStorage.setItem(LS_LOTES, JSON.stringify(v));
+    const getSens  = ()=> JSON.parse(localStorage.getItem(LS_SENS)||'[]');
+    const setSens  = (v)=> localStorage.setItem(LS_SENS, JSON.stringify(v));
+
+    // Routing
+    const routes = ["inicio","lotes","lote-detalle","sensores","catalogo","config","ayuda","crear-lote"];
+    function nav(id){ location.hash = id; }
+    function goBack(){ history.back(); }
+
+    function applyRoute(){
+      const id = location.hash.replace('#','') || 'inicio';
+      routes.forEach(r=>{ const el=document.getElementById(r); if(el) el.classList.toggle('active', r===id); });
+      document.getElementById('backBtn').hidden = (id==='inicio');
+      document.getElementById('subtitle').textContent = id==='inicio' ? 'Inicio' : id.replace(/^(.)/,m=>m.toUpperCase());
+      if(id==='lotes') renderLotes();
+      if(id==='catalogo') renderCatalogo();
+      if(id==='lote-detalle') renderDetalle(actualLotId);
+      if(id==='sensores') mountCharts();
+    }
+    window.addEventListener('hashchange', applyRoute);
+
+    // Donut charts
+    function donut(element, value, label, unit, color){
+      const radius = 52, circ = 2*Math.PI*radius;
+      const pct = Math.max(0, Math.min(100, value));
+      const dash = (pct/100)*circ;
+      element.innerHTML = `
+        <div class="meter">
+          <svg viewBox="0 0 140 140"><g transform="translate(70,70)">
+            <circle r="58" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="16"/>
+            <circle r="52" fill="none" stroke="${color}" stroke-linecap="round" stroke-width="12" stroke-dasharray="${dash} ${circ-dash}" transform="rotate(-90)"/>
+          </g></svg>
+          <div class="value">${value}<small style="font-weight:500;opacity:.7">${unit||''}</small></div>
+        </div>
+        <div class="muted">${label}</div>`;
+    }
+    function rnd(min,max){ return Math.round(min + Math.random()*(max-min)); }
+
+    const soilSpecs=[
+      { key:'humedad', label:'Humedad suelo', unit:'%', range:[10,55], color:'var(--accent-2)' },
+      { key:'ec', label:'Conductividad (EC)', unit:' dS/m', range:[0.1,3.0], color:'var(--accent)' },
+      { key:'ph', label:'pH', unit:'', range:[4.5,8.5], color:'var(--warning)' },
+      { key:'npk', label:'NPK (relativo)', unit:'%', range:[20,100], color:'var(--danger)' },
+    ];
+    const climaSpecs=[
+      { key:'ppt', label:'Precipitación', unit:' mm', range:[0,25], color:'var(--accent)' },
+      { key:'t', label:'Temperatura', unit:' °C', range:[10,33], color:'var(--warning)' },
+      { key:'rad', label:'Radiación', unit:' W/m²', range:[200,1000], color:'var(--accent-2)' },
+    ];
+    const hidricoSpecs=[ { key:'bh', label:'Balance Hídrico', unit:'%', range:[0,100], color:'var(--accent)' } ];
+
+    function mountCharts(){
+      const suelo = document.getElementById('charts-suelo');
+      const clima = document.getElementById('charts-clima');
+      const hidrico = document.getElementById('charts-hidrico');
+      if(!suelo||!clima||!hidrico) return;
+      suelo.innerHTML = clima.innerHTML = hidrico.innerHTML = '';
+
+      soilSpecs.forEach(s=>{
+        const card = document.createElement('div'); card.className='chart'; suelo.appendChild(card);
+        const value = s.key==='ph' ? (Math.round((s.range[0] + Math.random()*(s.range[1]-s.range[0]))*10)/10) : rnd(s.range[0], s.range[1]);
+        donut(card, value, s.label, s.unit, getVarColor(s.color));
+      });
+      climaSpecs.forEach(s=>{
+        const card = document.createElement('div'); card.className='chart'; clima.appendChild(card);
+        const value = rnd(s.range[0], s.range[1]);
+        donut(card, value, s.label, s.unit, getVarColor(s.color));
+      });
+      hidricoSpecs.forEach(s=>{
+        const card = document.createElement('div'); card.className='chart'; hidrico.appendChild(card);
+        const value = rnd(s.range[0], s.range[1]);
+        donut(card, value, s.label, s.unit, getVarColor(s.color));
+      });
+    }
+    // Botón "Actualizar datos" en Mis Sensores
+    function randomizeAll(){ mountCharts(); }
+    function getVarColor(cssVar){ return getComputedStyle(document.documentElement).getPropertyValue(cssVar.replace('var(','').replace(')','')).trim() || cssVar; }
+
+    // Mis Lotes
+    function renderLotes(){
+      const grid=document.getElementById('lotsGrid');
+      const lotes=getLotes();
+      grid.innerHTML='';
+      lotes.forEach(l=>{ const card=document.createElement('div'); card.className='card'; card.innerHTML=`<div class="emoji">🥑</div><h3>${l.nombre}</h3><div class="badge">${l.cultivo} • ${l.area} ha</div>`; card.onclick=()=>openDetalle(l.id); grid.appendChild(card); });
+      const add=document.createElement('div'); add.className='card ghost'; add.innerHTML=`<div class="emoji">➕</div><h3>Crear Lote</h3><div class="badge">Añadir nuevo</div>`; add.onclick=()=>nav('crear-lote'); grid.appendChild(add);
+    }
+
+    let actualLotId=null;
+    function openDetalle(id){ actualLotId=id; nav('lote-detalle'); }
+
+    function renderDetalle(id){
+      const lot=getLotes().find(x=>x.id===id); if(!lot) return;
+      document.getElementById('lotTitle').textContent=lot.nombre;
+      document.getElementById('sumCultivo').textContent=lot.cultivo;
+      document.getElementById('sumArea').textContent=lot.area+' ha';
+      document.getElementById('sumFecha').textContent=lot.fecha;
+      const edad=diffDays(lot.fecha); document.getElementById('lotAge').textContent=`Edad: ${edad} días`;
+
+      document.querySelectorAll('.tab').forEach(b=>{ b.classList.remove('active'); if(b.dataset.tab==='mapa') b.classList.add('active'); });
+      document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+      document.getElementById('tab-mapa').classList.add('active');
+
+      const ndvi=Math.round((0.35+Math.random()*0.45)*100)/100;
+      document.getElementById('ndviVal').textContent=ndvi.toFixed(2);
+      donut(document.getElementById('ndviDonut'), Math.round(ndvi*100), 'NDVI','', getVarColor('var(--accent-2)'));
+
+      const hum=rnd(20,60);
+      document.getElementById('iaNdvi').textContent=ndvi.toFixed(2);
+      document.getElementById('iaHum').textContent=hum+'%';
+      document.getElementById('iaText').textContent=iaRecoText(ndvi,hum);
+
+      renderTasks(edad,ndvi,hum);
+      renderLoteSensors(lot);
+
+      document.querySelectorAll('.tab').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); const name=b.dataset.tab; document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active')); document.getElementById('tab-'+name).classList.add('active'); } });
+
+      const cm=getComments()[lot.id]||''; const cb=document.getElementById('commentBox'); if(cb){ cb.value=cm; document.getElementById('commentStatus').textContent = cm? 'Comentario guardado anteriormente (local)':''; }
+    }
+
+    function renderTasks(edad,ndvi,hum){
+      const el=document.getElementById('tasksList'); el.innerHTML='';
+      const fases=[];
+      if(edad<30) fases.push({t:'Establecimiento', d:'Monitorear prendimiento y riego ligero frecuente.'});
+      else if(edad<120) fases.push({t:'Desarrollo vegetativo', d:'Ajustar fertirriego según crecimiento; control de malezas.'});
+      else fases.push({t:'Producción', d:'Manejo de carga, nutrición de soporte y riego por demanda.'});
+      if(ndvi<0.45) fases.push({t:'Alerta vigor bajo', d:'Revisar estrés hídrico, nutrición N y sanidad.'});
+      if(hum<30) fases.push({t:'Déficit hídrico', d:'Programar riego correctivo (lámina 10–20 mm).'});
+      fases.forEach((f,i)=>{ const div=document.createElement('div'); div.className='task'; div.style.cssText='border:1px solid #2b3957;border-radius:12px;padding:10px;background:#0e1728'; div.innerHTML=`<strong>${i+1}. ${f.t}</strong><p style="margin:.35rem 0 0">${f.d}</p>`; el.appendChild(div); });
+    }
+
+    function iaRecoText(ndvi,hum){
+      if(ndvi>=0.6 && hum>=35) return 'Mantener láminas de riego programadas; considerar aporte de K y Ca para soporte.';
+      if(ndvi<0.45) return 'Incrementar monitoreo; evaluar fertilización nitrogenada y riego suplementario.';
+      if(hum<30) return 'Aplicar riego correctivo y verificar uniformidad del sistema.';
+      return 'Condiciones dentro de rango; seguir plan estándar y verificar semanalmente.';
+    }
+
+    // Sensores (solo gráfica)
+    function renderLoteSensors(lot){
+      const sens=getSens().filter(s=>lot.sensores.includes(s.id));
+      const byType={}; sens.forEach(s=>{ if(!byType[s.tipo]) byType[s.tipo]={count:0,bat:0}; byType[s.tipo].count++; byType[s.tipo].bat+=s.bateria; });
+      const data=Object.entries(byType).map(([k,v])=>({tipo:k,count:v.count,bat:Math.round(v.bat/v.count)}));
+      renderSensorsBarChart('sensChart', data);
+    }
+
+    function diffDays(iso){ const d=new Date(iso); const now=new Date(); return Math.max(0, Math.round((now-d)/(1000*60*60*24))); }
+
+    function getComments(){ return JSON.parse(localStorage.getItem(LS_COMMENTS)||'{}'); }
+    function setComments(v){ localStorage.setItem(LS_COMMENTS, JSON.stringify(v)); }
+    function guardarComentarioActual(){ const lot=getLotes().find(x=>x.id===actualLotId); if(!lot) return; const txt=document.getElementById('commentBox').value.trim(); const all=getComments(); all[lot.id]=txt; setComments(all); const st=document.getElementById('commentStatus'); st.textContent='Comentario guardado localmente.'; setTimeout(()=>st.textContent='',2000); }
+
+    function emparejarSensor(){ const lot=getLotes().find(x=>x.id===actualLotId); if(!lot) return; const newId='S'+Math.floor(100+Math.random()*900); const tipos=['Humedad Suelo','EC Suelo','pH Suelo','NPK Suelo','Temperatura Aire','Radiación']; const nuevo={id:newId,tipo:tipos[Math.floor(Math.random()*tipos.length)],estado:'OK',bateria:rnd(40,100),vinculado:lot.id}; const sens=getSens(); sens.push(nuevo); setSens(sens); lot.sensores.push(newId); setLotes([...getLotes().filter(l=>l.id!==lot.id), lot]); renderDetalle(lot.id); alert('Sensor '+newId+' emparejado al lote.'); }
+
+    function renderCatalogo(){ const body=document.getElementById('catalogBody'); body.innerHTML=''; getSens().forEach(s=>{ const lote=getLotes().find(l=>l.id===s.vinculado); const tr=document.createElement('tr'); tr.innerHTML=`<td>${s.id}</td><td>${s.tipo}</td><td>${s.estado}</td><td>${s.bateria}%</td><td>${lote?lote.nombre:'—'}</td><td><button class="btn" onclick="toggleVinculo('${s.id}')">${lote?'Desvincular':'Vincular'}</button></td>`; body.appendChild(tr); }); }
+    function toggleVinculo(id){ const sens=getSens(); const s=sens.find(x=>x.id===id); if(!s) return; if(s.vinculado){ s.vinculado=null; } else { const lotes=getLotes(); if(!lotes.length){ alert('No hay lotes. Crea uno primero.'); return; } s.vinculado=lotes[0].id; } setSens(sens); renderCatalogo(); }
+    function nuevoSensorMock(){ const newId='S'+Math.floor(100+Math.random()*900); const tipos=['Humedad Suelo','EC Suelo','pH Suelo','NPK Suelo','Temperatura Aire','Radiación','Lluvia']; const nuevo={id:newId,tipo:tipos[Math.floor(Math.random()*tipos.length)],estado:'OK',bateria:rnd(40,100),vinculado:null}; const sens=getSens(); sens.push(nuevo); setSens(sens); renderCatalogo(); alert('Sensor '+newId+' añadido al catálogo.'); }
+
+    function crearLote(e){ e.preventDefault(); const lotes=getLotes(); const id='L'+Math.floor(100+Math.random()*900); const nuevo={ id, nombre: document.getElementById('fCultivo').value + ' ' + id, cultivo: document.getElementById('fCultivo').value, area: parseFloat(document.getElementById('fArea').value||0), fecha: document.getElementById('fFecha').value, distrib: document.getElementById('fDistrib').value, ubic: document.getElementById('fUbic').value, notas: document.getElementById('fNotas').value, sensores: [] }; lotes.push(nuevo); setLotes(lotes); document.getElementById('crearStatus').textContent='Lote guardado.'; setTimeout(()=>{ nav('lotes'); },600); return false; }
+
+    // Logo
+    const logoSrc='';
+    window.addEventListener('load',()=>{ const img=document.getElementById('logoImg'); if(img){ if(logoSrc){ img.src=logoSrc; } else { const svg='data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><defs><linearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop stop-color=\"#4caf50\"/><stop offset=\"1\" stop-color=\"#2e7d32\"/></linearGradient></defs><rect rx=\"10\" ry=\"10\" width=\"64\" height=\"64\" fill=\"#0e1728\" stroke=\"#2b3957\"/><g transform=\"translate(6,6)\"><circle cx=\"26\" cy=\"26\" r=\"24\" fill=\"none\" stroke=\"url(#g)\" stroke-width=\"4\"/><path d=\"M18 36c8-2 14-10 14-18c-8 2-14 10-14 18zM34 34c-3-5-2-12 2-16c3 5 2 12-2 16z\" fill=\"url(#g)\"/></g></svg>`); img.src=svg; } } });
+
+    // Gráfica barras
+    function renderSensorsBarChart(containerId,data){ const el=document.getElementById(containerId); if(!el) return; el.innerHTML=''; if(!data.length){ el.innerHTML='<div class="muted">Sin sensores vinculados</div>'; return; } const maxCount=Math.max(...data.map(d=>d.count)); const rowH=26, padX=120, w=680, h=rowH*data.length+20; const bars=data.map((d,i)=>{ const width=Math.max(6, Math.round((d.count/maxCount)*(w-padX-40))); const y=10+i*rowH; const color='#8bdf72'; return `<g><text x=\"10\" y=\"${y+16}\" fill=\"#8fa3c9\" font-size=\"12\">${d.tipo}</text><rect x=\"${padX}\" y=\"${y}\" width=\"${width}\" height=\"14\" rx=\"7\" ry=\"7\" fill=\"${color}\" /><text x=\"${padX+width+6}\" y=\"${y+12}\" fill=\"#eaf2ff\" font-size=\"12\">${d.count} · ${d.bat}%</text></g>`; }).join(''); el.innerHTML=`<svg viewBox=\"0 0 ${w} ${h}\" width=\"100%\" height=\"${h}\">${bars}</svg>`; }
+
+    // Boot
+    function init(){ seed(); renderLotes(); mountCharts(); applyRoute(); runSelfTests(); }
+    window.addEventListener('load', init);
+
+    // Self tests (no modificar; se agregan nuevas coberturas debajo)
+    function runSelfTests(){ try{ console.group('WiSe UI – Self Tests'); console.assert(typeof nav==='function','nav debe estar definido'); console.assert(document.getElementById('inicio'),'Sección inicio existe'); const prev=location.hash; nav('lotes'); applyRoute(); console.assert(document.getElementById('lotes').classList.contains('active'),'Vista lotes activa'); nav('lote-detalle'); applyRoute(); console.assert(document.getElementById('lote-detalle'),'Vista detalle existe'); location.hash=prev||'#inicio'; applyRoute(); 
+      // === Tests adicionales ===
+      const lotes = getLotes();
+      console.assert(Array.isArray(lotes) && lotes.length>=2, 'Debe haber al menos 2 lotes seed');
+      const sens = getSens();
+      console.assert(Array.isArray(sens) && sens.length>=5, 'Debe haber sensores seed');
+      // Render gráfico del lote actual si existe
+      if(lotes[0]){ actualLotId = lotes[0].id; renderDetalle(actualLotId); const sc=document.getElementById('sensChart'); console.assert(sc && sc.querySelector('svg'), 'Gráfica de sensores del lote debe renderizar SVG'); }
+      console.groupEnd(); }catch(e){ console.error('SelfTests error:',e); }}
+  </script>
+</body>
+</html>

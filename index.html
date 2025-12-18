@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WiSe - Monitoreo Agrícola Inteligente</title>
+  <meta name="description" content="WiSe es una plataforma de monitoreo agrícola inteligente con sensores IoT, alertas de riego, recomendaciones agronómicas y paneles de control para tus cultivos.">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Iconos (WhatsApp) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+<body>
+  <!-- HEADER / NAV -->
+  <header class="main-header">
+    <div class="container header-content">
+      <div class="logo">
+        <!-- Reemplaza la ruta del src con tu logo real de WiSe -->
+        <img src="img/logo-wise.png" alt="Logo WiSe" />
+        <span>WiSe</span>
+      </div>
+
+      <nav class="main-nav">
+        <a href="#inicio">Inicio</a>
+        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#screenshots">App</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#para-quien">Para quién es</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+
+      <div class="auth-buttons">
+        <a href="./login.html" class="btn-outline">Log In</a>
+        <a href="./signup.html" class="btn-primary">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO / PORTADA -->
+  <section id="inicio" class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1>WiSe: Tu campo conectado, decisiones inteligentes</h1>
+        <p>
+          Monitorea tus cultivos en tiempo real con sensores IoT, mapas NDVI
+          y recomendaciones agronómicas. Toma decisiones de riego y nutrición
+          basadas en datos, no en suposiciones.
+        </p>
+        <div class="hero-actions">
+          <a href="#contacto" class="btn-primary">Agendar demostración</a>
+          <a href="#funcionalidades" class="btn-secondary">Ver funcionalidades</a>
+        </div>
+        <div class="hero-highlights">
+          <span>✔ Sensores de suelo y clima</span>
+          <span>✔ Alertas de riego y estrés hídrico</span>
+          <span>✔ Mapas NDVI y salud del cultivo</span>
+        </div>
+      </div>
+
+      <!-- Mockup / resumen visual -->
+      <div class="hero-image">
+        <div class="mockup-card">
+          <h3>Panel WiSe</h3>
+          <p>Visualiza el estado de tus lotes en una sola pantalla.</p>
+          <ul>
+            <li>Humedad y temperatura del suelo</li>
+            <li>Clima en tiempo real</li>
+            <li>Índice NDVI por lote</li>
+            <li>Alertas y recomendaciones agronómicas</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNCIONALIDADES / SERVICIOS -->
+  <section id="funcionalidades" class="section">
+    <div class="container">
+      <h2>Funcionalidades de WiSe</h2>
+      <p class="section-subtitle">
+        Una plataforma diseñada para integrar sensores, datos satelitales y conocimiento agronómico en un solo lugar.
+      </p>
+
+      <div class="card-grid">
+        <article class="card">
+          <h3>Monitoreo de sensores IoT</h3>
+          <p>
+            Conecta sensores de humedad y temperatura de suelo, clima, radiación
+            y otros parámetros claves para entender el estado real del cultivo.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Alertas inteligentes</h3>
+          <p>
+            Recibe alertas de riego, riesgo de estrés hídrico, posibles
+            problemas de drenaje y recomendaciones de manejo basadas en datos.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Mapas y NDVI</h3>
+          <p>
+            Consulta mapas por lote, imágenes satelitales y NDVI para identificar
+            zonas con bajo vigor, compactación o problemas de nutrición.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Históricos y reportes</h3>
+          <p>
+            Analiza históricos de sensores, lluvias, riegos y decisiones
+            agronómicas para mejorar la productividad campaña tras campaña.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Recomendaciones agronómicas</h3>
+          <p>
+            Motor de recomendaciones que aprende de los datos de tu finca y
+            del criterio técnico para sugerir mejores prácticas.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Multi-lotes y multi-cultivos</h3>
+          <p>
+            Administra varios lotes y cultivos desde la misma app, con
+            indicadores específicos por zona y tipo de cultivo.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUEVA SECCIÓN: PANTALLAS DE LA APP -->
+  <section id="screenshots" class="section section-screens">
+    <div class="container">
+      <h2>Pantallas de la app WiSe</h2>
+      <p class="section-subtitle">
+        Así verás tus lotes, sensores y recomendaciones dentro de la plataforma.
+      </p>
+
+      <div class="screens-grid">
+        <article class="screen-card">
+          <div class="screen-image">
+            <!-- Reemplaza estas rutas por las imágenes reales de tu app -->
+            <img src="img/app-lotes.png" alt="Pantalla de lotes y mapa en WiSe" />
+          </div>
+          <h3>Lotes & mapa</h3>
+          <p>
+            Visualiza cada lote con su área, cultivo, estado y un mapa general
+            de la finca para navegar de forma intuitiva.
+          </p>
+        </article>
+
+        <article class="screen-card">
+          <div class="screen-image">
+            <img src="img/app-ndvi.png" alt="Pantalla NDVI en WiSe" />
+          </div>
+          <h3>Mapa NDVI</h3>
+          <p>
+            Consulta el índice de vegetación por zonas del lote y detecta
+            sectores con menor vigor para intervenir a tiempo.
+          </p>
+        </article>
+
+        <article class="screen-card">
+          <div class="screen-image">
+            <img src="img/app-sensores.png" alt="Pantalla de sensores en WiSe" />
+          </div>
+          <h3>Sensores en tiempo real</h3>
+          <p>
+            Gráficas claras de humedad de suelo, temperatura, lluvia y otros
+            parámetros clave para el manejo diario.
+          </p>
+        </article>
+
+        <article class="screen-card">
+          <div class="screen-image">
+            <img src="img/app-recomendaciones.png" alt="Pantalla de recomendaciones en WiSe" />
+          </div>
+          <h3>Recomendaciones agronómicas</h3>
+          <p>
+            Recibe sugerencias de riego, nutrición y manejo basadas en la
+            información de tus sensores y el historial de la finca.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section id="beneficios" class="section section-alt">
+    <div class="container">
+      <h2>Beneficios para tu finca</h2>
+
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <h3>Ahorro de agua</h3>
+          <p>
+            Riegos más precisos según el estado real del suelo y del cultivo,
+            evitando exceso o falta de agua.
+          </p>
+        </div>
+        <div class="benefit-item">
+          <h3>Mejor productividad</h3>
+          <p>
+            Detecta problemas a tiempo y ajusta fertilización, riego y manejo
+            antes de que impacten la cosecha.
+          </p>
+        </div>
+        <div class="benefit-item">
+          <h3>Decisiones basadas en datos</h3>
+          <p>
+            Deja de “adivinar”: respalda las decisiones con sensores, mapas
+            e historial agronómico.
+          </p>
+        </div>
+        <div class="benefit-item">
+          <h3>Seguimiento simple</h3>
+          <p>
+            Ten en el celular o en el panel web una visión clara de cómo va
+            cada lote, día a día.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARA QUIÉN ES -->
+  <section id="para-quien" class="section">
+    <div class="container">
+      <h2>¿Para quién es WiSe?</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-number">1</span>
+          <h3>Productores y fincas</h3>
+          <p>
+            Agricultores que quieren controlar mejor el riego, la nutrición
+            y la sanidad de sus cultivos con apoyo tecnológico.
+          </p>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <h3>Empresas agrícolas</h3>
+          <p>
+            Proyectos con varios lotes o sedes que requieren estandarizar
+            el manejo y centralizar la información.
+          </p>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <h3>Asesores y agrónomos</h3>
+          <p>
+            Profesionales que acompañan fincas y necesitan datos claros
+            para tomar decisiones técnicas junto al productor.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN / SIGNUP ANCLAS -->
+  <section id="login" class="section section-alt">
+    <div class="container auth-section">
+      <h2>Accede a tu panel WiSe</h2>
+      <p>Si ya tienes una cuenta, inicia sesión para ver tus lotes y sensores.</p>
+      <a href="#" class="btn-primary">Log In</a>
+    </div>
+  </section>
+
+  <section id="signup" class="section">
+    <div class="container auth-section">
+      <h2>Regístrate y conecta tu finca</h2>
+      <p>
+        Cuéntanos sobre tus cultivos y te ayudamos a configurar tus sensores,
+        lotes y primeras alertas.
+      </p>
+      <a href="#contacto" class="btn-secondary">Quiero empezar con WiSe</a>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto" class="section section-alt">
+    <div class="container contact-grid">
+      <div>
+        <h2>Hablemos de tu proyecto agrícola</h2>
+        <p>
+          Déjanos tus datos y te contactaremos para mostrarte cómo WiSe
+          puede adaptarse a tus cultivos y a tu presupuesto.
+        </p>
+        <ul class="contact-info">
+          <li><strong>Teléfono:</strong> +57 300 000 0000</li>
+          <li><strong>Email:</strong> contacto@wise-agro.com</li>
+          <li><strong>Ubicación:</strong> Colombia</li>
+        </ul>
+      </div>
+
+      <form class="contact-form">
+        <div class="form-group">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" placeholder="Tu nombre" required />
+        </div>
+        <div class="form-group">
+          <label for="finca">Nombre de la finca / empresa</label>
+          <input type="text" id="finca" placeholder="Finca El Encanto" required />
+        </div>
+        <div class="form-group">
+          <label for="cultivo">Cultivo principal</label>
+          <input type="text" id="cultivo" placeholder="Ej. Aguacate, café, hortalizas" />
+        </div>
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required />
+        </div>
+        <div class="form-group">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" rows="4" placeholder="Cuéntanos qué te gustaría monitorear con WiSe"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Enviar mensaje</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <div class="container footer-content">
+      <p>© 2025 WiSe. Todos los derechos reservados.</p>
+      <p class="footer-small">Monitoreo agrícola inteligente para decisiones más precisas.</p>
+    </div>
+  </footer>
+
+  <!-- BOTÓN FLOTANTE WHATSAPP -->
+  <a
+    href="https://wa.me/573000000000?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20la%20plataforma%20WiSe%20para%20mis%20cultivos."
+    class="whatsapp-float"
+    target="_blank"
+    rel="noopener"
+  >
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</body>
+</html>
